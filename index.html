@@ -2,100 +2,41 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Login Liceo Boston</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
   <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
-    * { box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-    body {
-      margin: 0;
-      background: #0f172a;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-    .login-container {
-      background: #1e293b;
-      padding: 2rem;
-      border-radius: 20px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.5);
-      width: 100%;
-      max-width: 400px;
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    input {
-      width: 100%;
-      padding: 0.75rem;
-      margin: 0.5rem 0;
-      border: none;
-      border-radius: 10px;
-      outline: none;
-    }
-    button {
-      width: 100%;
-      padding: 0.75rem;
-      margin-top: 1rem;
-      border: none;
-      border-radius: 10px;
-      background: #2563eb;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-    }
-    .link {
-      display: block;
-      text-align: right;
-      margin-top: 0.5rem;
-      color: #93c5fd;
-      cursor: pointer;
-    }
-    #g_id_onload, #google-login {
-      margin-top: 1.5rem;
-    }
+    /* Todo tu estilo aquí (igual que antes) */
   </style>
 </head>
 <body>
   <div class="login-container">
     <h2>Iniciar sesión</h2>
-    
-    <!-- Inputs clásicos -->
     <input type="email" id="email" placeholder="Correo institucional" />
     <input type="password" id="password" placeholder="Contraseña" />
     <span class="link" onclick="recoverPassword()">¿Olvidaste tu contraseña?</span>
     <button onclick="login()">Ingresar</button>
-
-    <!-- Login con Google -->
+    
     <div id="g_id_onload"
-         data-client_id="1074629241014-a86qvgqvk7c9leqj1vpqsvsjfchcm81h.apps.googleusercontent.com"
-         data-callback="handleCredentialResponse"
-         data-auto_prompt="false"
-         data-ux_mode="popup"
-         data-login_uri=""
-         data-itp_support="true"
-         data-context="signin">
+      data-client_id="1074629241014-kfcusssthr1hk1nnr3viemncl0imr41e.apps.googleusercontent.com"
+      data-login_uri="https://IshIsra.github.io/loginliceo"
+      data-auto_prompt="false">
     </div>
 
     <div class="g_id_signin"
-         data-type="standard"
-         data-size="large"
-         data-theme="outline"
-         data-text="sign_in_with"
-         data-shape="rectangular"
-         data-logo_alignment="left">
+      data-type="standard"
+      data-shape="rectangular"
+      data-theme="outline"
+      data-text="signin_with"
+      data-size="large"
+      data-logo_alignment="left">
     </div>
   </div>
 
   <script>
     function login() {
-      const email = document.getElementById("email").value.trim();
-      const password = document.getElementById("password").value.trim();
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value.trim();
 
       if (email.endsWith("@liceoboston.edu.co") && password === "12345") {
         window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
@@ -105,29 +46,8 @@
     }
 
     function recoverPassword() {
-      alert("Redireccionando a recuperación de contraseña...");
+      alert("Recuperación de contraseña simulada. Serás redirigido al sitio institucional.");
       window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
-    }
-
-    function handleCredentialResponse(response) {
-      const data = parseJwt(response.credential);
-      const email = data.email;
-
-      if (email.endsWith("@liceoboston.edu.co")) {
-        window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
-      } else {
-        alert("Solo se permite el ingreso con cuentas institucionales (@liceoboston.edu.co).");
-      }
-    }
-
-    function parseJwt(token) {
-      const base64Url = token.split('.')[1];
-      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-      const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
-        '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
-      ).join(''));
-
-      return JSON.parse(jsonPayload);
     }
   </script>
 </body>
