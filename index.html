@@ -31,14 +31,32 @@
       max-width: 400px;
       text-align: center;
     }
-    .logo {
-      width: 120px;
+    .logo-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
       margin-bottom: 1rem;
     }
+    .logo-icon {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 40px;
+      height: 40px;
+      background-color: #9DC53D;
+      border-radius: 50%;
+      font-weight: bold;
+      font-size: 1rem;
+      color: #1e293b;
+    }
+    .logo-text {
+      font-size: 1.25rem;
+      font-weight: bold;
+    }
     .slogan {
-      font-size: 0.85rem;
+      font-size: 0.9rem;
       color: #64748b;
-      margin-top: 1rem;
       margin-bottom: 1.5rem;
     }
     input {
@@ -94,7 +112,14 @@
 </head>
 <body>
   <div class="login-container">
-    <img src="https://liceoboston.edu.co/wp-content/uploads/2021/09/logoLiceoBoston-blanco.png" alt="Logo Liceo Boston" class="logo" onerror="this.style.display='none'">
+    <div class="logo-box">
+      <div class="logo-icon">LB</div>
+      <div class="logo-text">Liceo Boston</div>
+    </div>
+
+    <div class="slogan">
+      Bienvenido al Portal para colaboradores de Liceo Boston
+    </div>
 
     <input type="email" id="email" placeholder="Correo institucional" />
     <input type="password" id="password" placeholder="Contraseña" />
@@ -115,10 +140,6 @@
       data-text="signin_with"
       data-size="large"
       data-logo_alignment="left">
-    </div>
-
-    <div class="slogan">
-      Somos un colegio bilingüe, una comunidad donde creemos que todos podemos vivir un camino de aprendizaje maravilloso, infinito y transformador.
     </div>
 
     <footer>
