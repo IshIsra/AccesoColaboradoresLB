@@ -29,9 +29,15 @@
       box-shadow: 0 8px 24px rgba(0,0,0,0.5);
       width: 100%;
       max-width: 400px;
-    }
-    h2 {
       text-align: center;
+    }
+    .logo {
+      width: 120px;
+      margin-bottom: 1rem;
+    }
+    .slogan {
+      font-size: 0.9rem;
+      color: #cbd5e1;
       margin-bottom: 1.5rem;
     }
     input {
@@ -77,20 +83,27 @@
     .message {
       margin-top: 1rem;
       color: #facc15;
-      text-align: center;
+    }
+    footer {
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #64748b;
     }
   </style>
 </head>
 <body>
   <div class="login-container">
-    <h2>Iniciar sesión</h2>
+    <img src="https://www.liceoboston.edu.co/wp-content/uploads/2021/06/cropped-LogoLiceoBoston-2.png" alt="Logo Liceo Boston" class="logo">
+    <div class="slogan">
+      Somos un colegio bilingüe, una comunidad donde creemos que todos podemos vivir un camino de aprendizaje maravilloso, infinito y transformador.
+    </div>
+
     <input type="email" id="email" placeholder="Correo institucional" />
     <input type="password" id="password" placeholder="Contraseña" />
     <span class="link" onclick="recoverPassword()">¿Olvidaste tu contraseña?</span>
     <button id="loginBtn" onclick="login()">Ingresar</button>
     <div class="message" id="message"></div>
 
-    <!-- Botón de Google -->
     <div id="g_id_onload"
       data-client_id="1074629241014-kfcusssthr1hk1nnr3viemncl0imr41e.apps.googleusercontent.com"
       data-login_uri="https://ishisra.github.io/loginliceo"
@@ -105,28 +118,28 @@
       data-size="large"
       data-logo_alignment="left">
     </div>
+
+    <footer>
+      Cra 80 N° 156 – 70, Colinas de Suba, Bogotá D.C.<br>
+      PBX: 683 9070 - comunicaciones@liceoboston.edu.co
+    </footer>
   </div>
 
   <script>
     let failedAttempts = 0;
-    const encodedPassword = "MTIzNDU="; // "12345" en base64
-
+    const encodedPassword = "MTIzNDU=";
     function decodePassword(encoded) {
       return atob(encoded);
     }
-
     function login() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
       const loginBtn = document.getElementById('loginBtn');
       const message = document.getElementById('message');
-
       loginBtn.disabled = true;
       message.textContent = "Verificando...";
-
       setTimeout(() => {
         const validPassword = decodePassword(encodedPassword);
-
         if (email.endsWith("@liceoboston.edu.co") && password === validPassword) {
           window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
         } else {
@@ -137,54 +150,47 @@
             message.textContent = "Correo o contraseña inválidos. Intenta nuevamente o accede con Google.";
           }
         }
-
         loginBtn.disabled = false;
-      }, 1000); // Simula tiempo de carga
+      }, 1000);
     }
-
     function recoverPassword() {
       const email = document.getElementById('email').value.trim();
       const message = document.getElementById('message');
-
       if (!email) {
         message.textContent = "Por favor ingresa un correo para verificar.";
         return;
       }
-
       if (email.endsWith("@liceoboston.edu.co")) {
         message.textContent = "Este correo está vinculado a Google. Inicia sesión directamente con Google.";
-
         const googleButton = document.querySelector('.g_id_signin');
         if (googleButton) {
           googleButton.scrollIntoView({ behavior: 'smooth' });
           googleButton.style.outline = "2px solid #2563eb";
+          setTimeout(() => {
+            googleButton.style.outline = "none";
+          }, 3000);
         }
       } else {
         message.textContent = "Este correo no tiene una cuenta registrada.";
       }
     }
-
     function handleCredentialResponse(response) {
       const data = parseJwt(response.credential);
       const email = data.email;
-
       if (email && email.endsWith("@liceoboston.edu.co")) {
         window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
       } else {
         alert("Solo se permite iniciar sesión con cuentas @liceoboston.edu.co");
       }
     }
-
     function parseJwt(token) {
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
       }).join(''));
-
       return JSON.parse(jsonPayload);
     }
   </script>
 </body>
 </html>
-
