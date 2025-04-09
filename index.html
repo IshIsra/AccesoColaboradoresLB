@@ -10,15 +10,17 @@
     * {
       box-sizing: border-box;
       font-family: 'Roboto', sans-serif;
+      transition: all 0.3s ease;
     }
     body {
       margin: 0;
       background: #0f172a;
-      color: white;
+      color: #f1f5f9;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      padding: 1rem;
     }
     .login-container {
       background: #1e293b;
@@ -39,6 +41,12 @@
       border: none;
       border-radius: 10px;
       outline: none;
+      background: #334155;
+      color: #f8fafc;
+    }
+    input:focus {
+      border: 2px solid #60a5fa;
+      background: #1e293b;
     }
     button {
       width: 100%;
@@ -52,6 +60,10 @@
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
     }
+    button:disabled {
+      background: #1e40af;
+      cursor: not-allowed;
+    }
     .link {
       display: block;
       text-align: right;
@@ -62,6 +74,11 @@
     .g_id_signin {
       margin-top: 1rem;
     }
+    .message {
+      margin-top: 1rem;
+      color: #facc15;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -70,7 +87,8 @@
     <input type="email" id="email" placeholder="Correo institucional" />
     <input type="password" id="password" placeholder="Contraseña" />
     <span class="link" onclick="recoverPassword()">¿Olvidaste tu contraseña?</span>
-    <button onclick="login()">Ingresar</button>
+    <button id="loginBtn" onclick="login()">Ingresar</button>
+    <div class="message" id="message"></div>
 
     <!-- Botón de Google -->
     <div id="g_id_onload"
@@ -90,25 +108,63 @@
   </div>
 
   <script>
+    let failedAttempts = 0;
+    const encodedPassword = "MTIzNDU="; // "12345" en base64
+
+    function decodePassword(encoded) {
+      return atob(encoded);
+    }
+
     function login() {
       const email = document.getElementById('email').value.trim();
       const password = document.getElementById('password').value.trim();
+      const loginBtn = document.getElementById('loginBtn');
+      const message = document.getElementById('message');
 
-      if (email.endsWith("@liceoboston.edu.co") && password === "12345") {
-        window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
-      } else {
-        alert("Correo o contraseña inválidos. Revisa que sí estés usando tu correo institucional.");
-      }
+      loginBtn.disabled = true;
+      message.textContent = "Verificando...";
+
+      setTimeout(() => {
+        const validPassword = decodePassword(encodedPassword);
+
+        if (email.endsWith("@liceoboston.edu.co") && password === validPassword) {
+          window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
+        } else {
+          failedAttempts++;
+          if (failedAttempts >= 3) {
+            message.textContent = "Demasiados intentos fallidos. Usa tu cuenta institucional de Google.";
+          } else {
+            message.textContent = "Correo o contraseña inválidos. Intenta nuevamente o accede con Google.";
+          }
+        }
+
+        loginBtn.disabled = false;
+      }, 1000); // Simula tiempo de carga
     }
 
     function recoverPassword() {
-      alert("Recuperación de contraseña simulada. Serás redirigido al sitio institucional.");
-      window.location.href = "https://sites.google.com/liceoboston.edu.co/liceobostonth/inicio";
+      const email = document.getElementById('email').value.trim();
+      const message = document.getElementById('message');
+
+      if (!email) {
+        message.textContent = "Por favor ingresa un correo para verificar.";
+        return;
+      }
+
+      if (email.endsWith("@liceoboston.edu.co")) {
+        message.textContent = "Este correo está vinculado a Google. Inicia sesión directamente con Google.";
+
+        const googleButton = document.querySelector('.g_id_signin');
+        if (googleButton) {
+          googleButton.scrollIntoView({ behavior: 'smooth' });
+          googleButton.style.outline = "2px solid #2563eb";
+        }
+      } else {
+        message.textContent = "Este correo no tiene una cuenta registrada.";
+      }
     }
 
-    // Callback de Google
     function handleCredentialResponse(response) {
-      // Decodificar el JWT (solo para leer el correo)
       const data = parseJwt(response.credential);
       const email = data.email;
 
@@ -131,3 +187,4 @@
   </script>
 </body>
 </html>
+
